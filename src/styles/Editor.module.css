@@ -44,19 +44,18 @@
     text-align: center;
 }
 
-#cursor_left, #cursor_right {
+.cursor_padding {
+    width: 2px !important;
+}
+
+#cursor {
+    animation: blink 1s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
-    border-right: 2px solid #212121;
-    border-left: 2px solid #212121;
 }
 
-#cursor_left {
-    animation: blink_left 1s;
-}
-
-#cursor_right {
-    animation: blink_right 1s;
+@keyframes blink {
+    50% { background-color: #fff }
 }
 
 @keyframes blink_left {

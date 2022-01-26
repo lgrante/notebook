@@ -12,18 +12,15 @@ class Editor extends React.Component {
             lines: [
                 {
                     text: 'Je suis trop fort',
-                    colors: [...Array(17).fill('white')],
-                    index: 1
+                    colors: [...Array(17).fill('white')]
                 },
                 {
                     text: 'Hello world',
-                    colors: [...Array(17).fill('white')],
-                    index: 2
+                    colors: [...Array(17).fill('white')]
                 },
                 {
                     text: 'Flemme d\'écrire plus lol',
-                    colors: [...Array(24).fill('white')],
-                    index: 3
+                    colors: [...Array(24).fill('white')]
                 }
             ],
             currentLineIndex: 0,
@@ -33,9 +30,7 @@ class Editor extends React.Component {
         this.linesContainerRef = React.createRef()
         this.handleLineClick = this.handleLineClick.bind(this)
         this.handleLineChange = this.handleLineKeyPress.bind(this)
-    }
 
-    componentDidMount () {
         window.onkeydown = event => {
             this.handleLineKeyPress(event)
         }
@@ -59,11 +54,14 @@ class Editor extends React.Component {
     handleLineKeyPress (event) {
         const {currentLineIndex, currentCursorIndex, lines} = this.state
 
+        console.log(event.code)
+
         for (const rule of defaultRules) {
             if (rule.keyTrigger(event)) {
                 const state = rule.action(event, currentLineIndex, currentCursorIndex, lines)
 
                 console.log(state)
+
                 this.setState({
                     lines: state.lines,
                     currentCursorIndex: state.cursorIndex,
@@ -78,17 +76,27 @@ class Editor extends React.Component {
 
         const isCharacterCursor = currentLineIndex === lineIndex && currentCursorIndex === index
         const color = lines[currentLineIndex].colors[currentCursorIndex]
-        const id = isCharacterCursor ? (currentCursorIndex > 0 ? styles.cursor_right : styles.cursor_left) : ''
 
         return (
-            <span
-                key={`${character}_${index}`}
-                style={{color}}
-                id={id}
-                onClick={e => this.handleLineClick(e)}
-            >
-                {character}
-            </span>
+            <>
+                <span 
+                    className={styles.cursor_padding}
+                    id={isCharacterCursor ? styles.cursor : ''}
+                />
+                <span
+                    key={`${character}_${index}`}
+                    style={{color}}
+                    onClick={e => this.handleLineClick(e)}
+                >
+                    {character}
+                </span>
+                {index === lines[lineIndex].text.length - 1 && (
+                    <span 
+                        className={styles.cursor_padding}
+                        id={isCharacterCursor ? styles.cursor : ''}
+                    />
+                )}
+            </>
         )
     }
 
@@ -96,13 +104,15 @@ class Editor extends React.Component {
         const {width, height} = this.props
         const {lines} = this.state
 
+        console.log(lines)
+
         return (
             <div id="container" style={{width, height}}>
                 <div id={styles.lines_container} ref={this.linesContainerRef}>
                     {lines.map((line, index) => (
                         <div className={styles.line_container} key={index}>
                             <div className={styles.line_index}>
-                                <span>{line.index}</span>
+                                <span>{index + 1}</span>
                             </div>
                             <div 
                                 className={styles.line_content} 
